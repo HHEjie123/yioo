@@ -65,8 +65,8 @@ def picture():
     # Create a config and configure the pipeline to stream
     #  different resolutions of color and depth streams
     config = rs.config()
-    config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
-    config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+    config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+    config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
     profile = pipeline.start(config)
     # Getting the depth sensor's depth scale (see rs-align example for explanation)
     depth_sensor = profile.get_device().first_depth_sensor()
@@ -111,7 +111,7 @@ def picture():
         #images = np.hstack((bg_removed, depth_colormap))
         cv2.namedWindow('Align Example', cv2.WINDOW_AUTOSIZE)
         cv2.imshow('Align Example', bg_removed)
-        key = cv2.waitKey(1)
+        key = cv2.waitKey()
         #print key
         if key ==ord('1'):
             cv2.imwrite('picture/%d.jpg'%(1),bg_removed)
@@ -132,33 +132,47 @@ def picture():
             cv2.imwrite('picture/%d.jpg' % (6), bg_removed)
             cv2.imwrite('picture/color_%d.jpg' % (6), color_image)
         if key == ord('s'):
-            pipeline.stop()
-            break
+            print('kjkk')
+        pipeline.stop()
+        break
+def huop():
+    #alist1=[]
+    #alist2=[]
+    pix1=[]
+    pix2=[]
+    pix3=[]
+    picture()
+    start=time.clock()
+    for kl in range(1,7):
+      shang, xia ,p1,p2= huojia('picture/%d.jpg'%(kl), pix=800, r=80, g=85, b=75)
+    # alist1.append([shang])
+    #  alist2.append([xia])
+      pix3.append(p1)
+      pix3.append(p2)
+      pix1.append(p1)
+      pix2.append(p2)
+    #alist=alist2+alist1
+    pixt=pix1+pix2
+    pix3.sort()
+    #print(alist)
+    print(pixt)
+    print((pix3))
+    for xpo in pixt:
+        if xpo ==pix3[0] or xpo ==pix3[1]  or xpo ==pix3[2]:
+            pixt[pixt.index(xpo)]=0
+        else:
+            pixt[pixt.index(xpo)]=1
 
-alist1=[]
-alist2=[]
-pix1=[]
-pix2=[]
-pix3=[]
-picture()
-start=time.clock()
-for kl in range(1,7):
-  shang, xia ,p1,p2= huojia('picture/%d.jpg'%(kl), pix=800, r=80, g=85, b=75)
-  alist1.append([shang])
-  alist2.append([xia])
-  pix3.append(pi,p2)
-  pix1.append(p1)
-  pix2.append(p2)
-alist=alist2+alist1
-pixt=pix1+pix2
-list.sort([pix3])
-pixt(list.index(pixt[0]))=0
-pixt(list.index(pixt[1]))=0
-pixt(list.index(pixt[2]))=0
-print(alist)
-print(pixt)
-end=time.clock()
-print('cost time is',end-start)
+    #print(alist)
+    print(pixt)
+    last_tiem=[[pixt[0],pixt[1],pixt[2],pixt[3],pixt[4],pixt[5]],
+               [pixt[6],pixt[7],pixt[8],pixt[9],pixt[10],pixt[11]
+                ]]
+    #print(' last item',last_tiem)
+    end=time.clock()
+    print('cost time is',end-start)
+    return last_tiem
 
-
-
+if __name__ =="__main__":
+   last_tiem=huop()
+   print(' last item',last_tiem)
