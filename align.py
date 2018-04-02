@@ -65,8 +65,8 @@ def picture():
     # Create a config and configure the pipeline to stream
     #  different resolutions of color and depth streams
     config = rs.config()
-    config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-    config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+    config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+    config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
     profile = pipeline.start(config)
     # Getting the depth sensor's depth scale (see rs-align example for explanation)
     depth_sensor = profile.get_device().first_depth_sensor()
@@ -75,7 +75,7 @@ def picture():
 
     # We will be removing the background of objects more than
     #  clipping_distance_in_meters meters away
-    clipping_distance_in_meters = 0.6  # 1 meter
+    clipping_distance_in_meters = 0.5  # 1 meter
     clipping_distance = clipping_distance_in_meters / depth_scale
 
     # Create an align object
@@ -135,14 +135,18 @@ def picture():
             pipeline.stop()
             break
 
-alist=[]
+alist1=[]
+alist2=[]
 picture()
 start=time.clock()
 for kl in range(1,7):
   shang, xia = huojia('picture/%d.jpg'%(kl), pix=800, r=80, g=85, b=75)
-  alist.append([shang,xia])
+  alist1.append([shang])
+  alist2.append([xia])
+alist=alist2+alist1
 print(alist)
 end=time.clock()
 print('cost time is',end-start)
+
 
 
