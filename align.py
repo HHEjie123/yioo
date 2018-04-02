@@ -26,9 +26,9 @@ def imgread(picture,imgcutxia,r,g,b):
         NpKernel[i, 2] = 1
     #imgcutxia = cv2.erode(imgcutxia, NpKernel)
     cv2.imwrite('%s_erode.jpg'%(picture),imgcutxia)
-    x = (imgcutxia[:, :, 0] > 10)
-    y = (imgcutxia[:, :, 1] > 10)
-    z = (imgcutxia[:, :, 2] > 10)
+    x = (imgcutxia[:, :, 0] > 6)
+    y = (imgcutxia[:, :, 1] > 6)
+    z = (imgcutxia[:, :, 2] > 6)
     p=np.sum((x & y & z))
     return  p
 def huojia(picture,pix,r,g,b):
@@ -37,16 +37,16 @@ def huojia(picture,pix,r,g,b):
     img = cv2.imread(picture)
     imgcutshang = img[0:280, 200:580]
     imgcutxia= img[260:480, 200:580]
-    p=imgread(picture+'shang',imgcutshang,r,g,b)
-    print(picture,'shang has  ',p)
-    if(p>pix):
+    p1=imgread(picture+'shang',imgcutshang,r,g,b)
+    print(picture,'shang has  ',p1)
+    if(p1>pix):
         print(picture,'shang is you')
         shang=1
     else:
         print((picture,'shang is wu'))
-    p = imgread(picture+'xia',imgcutxia,r,g,b)
-    print(picture,'xia  has  ', p)
-    if (p > pix):
+    p2 = imgread(picture+'xia',imgcutxia,r,g,b)
+    print(picture,'xia  has  ', p2)
+    if (p2 > pix):
         print(picture,'xia is you')
         xia=1
     else:
@@ -55,7 +55,7 @@ def huojia(picture,pix,r,g,b):
     cv2.imwrite('%s_xia.jpg'%(picture),imgcutxia)
     cv2.imwrite('maskshang.jpg',imgcutshang)
     cv2.imwrite('maskxia.jpg', imgcutxia)
-    return shang,xia
+    return shang,xia,p1,p2
 
 
 
@@ -137,14 +137,26 @@ def picture():
 
 alist1=[]
 alist2=[]
+pix1=[]
+pix2=[]
+pix3=[]
 picture()
 start=time.clock()
 for kl in range(1,7):
-  shang, xia = huojia('picture/%d.jpg'%(kl), pix=800, r=80, g=85, b=75)
+  shang, xia ,p1,p2= huojia('picture/%d.jpg'%(kl), pix=800, r=80, g=85, b=75)
   alist1.append([shang])
   alist2.append([xia])
+  pix3.append(pi,p2)
+  pix1.append(p1)
+  pix2.append(p2)
 alist=alist2+alist1
+pixt=pix1+pix2
+list.sort([pix3])
+pixt(list.index(pixt[0]))=0
+pixt(list.index(pixt[1]))=0
+pixt(list.index(pixt[2]))=0
 print(alist)
+print(pixt)
 end=time.clock()
 print('cost time is',end-start)
 
