@@ -8,7 +8,9 @@ sudo apt-get install python-numpy
 sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev libgflags-dev libgoogle-glog-dev liblmdb-dev protobuf-compiler 
 
 sudo apt-get update
-
+sudo pip install python-yaml
+sudo pip install Cython
+sudo pip install easydict
 
 sudo apt-get install --no-install-recommends libboost-all-dev
 
