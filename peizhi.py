@@ -1,5 +1,5 @@
 pip install protobuf
-sudo apt-get install python-pip
+sudo apt-get install python-pip  python-yaml
 sudo apt-get install python-skimage
 sudo apt-get install the python-dev
 sudo apt-get python-matplotlib
@@ -8,7 +8,7 @@ sudo apt-get install python-numpy
 sudo apt-get install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libboost-all-dev libhdf5-serial-dev libgflags-dev libgoogle-glog-dev liblmdb-dev protobuf-compiler 
 
 sudo apt-get update
-sudo pip install python-yaml
+
 sudo pip install Cython
 sudo pip install easydict
 
