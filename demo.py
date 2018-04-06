@@ -31,14 +31,13 @@ import time
 #            'greenzhuan', 'blue zhuan', 'xuehua', 'green zhuan',
 #                                 'xuebi', 'red zhuan', 'red zhuan', 'shuangwaiwai', 'apple',
 #                                 'apple','gangsiqiu','wangqiu')
-CLASSES = ('__background__',
-           'greenzhuan', 'blue zhuan', 'yumaoqiu', 'xuebi',
-           'xuehua', 'red zhuan', 'yellow zhuan',
-           'apple', 'gangsiqiu', 'wangqiu')
+
+CLASSES = ('__background__', # always index 0
+                        'red zhuan', 'green zhuan', 'blue zhuan','yellow zhuan','yangleduo','xuebi','xuehua','shuangwaiwai','gangsiqiu','wangqiu','yumaoqiu','apple')
 NETS = {'vgg16': ('VGG16',
                   'VGG16_faster_rcnn_final.caffemodel'),
         'zf': ('ZF',
-               'hjZF_faster_rcnn_final.caffemodel')}
+               '3318000ZF_faster_rcnn_final.caffemodel')}
 
 
 def zuobiao(x1, x2, x3, x4):
@@ -130,47 +129,28 @@ def demo(net, image_name):
     plt.draw()
 
 
-def parse_args():
-    """Parse input arguments."""
-    parser = argparse.ArgumentParser(description='Faster R-CNN demo')
-    parser.add_argument('--gpu', dest='gpu_id', help='GPU device id to use [0]',
-                        default=0, type=int)
-    parser.add_argument('--cpu', dest='cpu_mode',
-                        help='Use CPU mode (overrides --gpu)',
-                        action='store_true')
-    parser.add_argument('--net', dest='demo_net', help='Network to use [vgg16]',
-                        choices=NETS.keys(), default='vgg16')
-
-    args = parser.parse_args()
-
-    return args
 
 
-if __name__ == '__main__':
+def load_model():
     t = time.time()
     cfg.TEST.HAS_RPN = True  # Use RPN for proposals
 
-    args = parse_args()
-
-    prototxt = os.path.join(cfg.MODELS_DIR, NETS[args.demo_net][0],
+    prototxt = os.path.join(cfg.MODELS_DIR, NETS["zf"][0],
                             'faster_rcnn_alt_opt', 'faster_rcnn_test.pt')
     caffemodel = os.path.join(cfg.DATA_DIR, 'faster_rcnn_models',
-                              NETS[args.demo_net][1])
+                              NETS["zf"][1])
 
     if not os.path.isfile(caffemodel):
         raise IOError(('{:s} not found.\nDid you run ./data/script/'
                        'fetch_faster_rcnn_models.sh?').format(caffemodel))
 
-    if args.cpu_mode:
-        caffe.set_mode_cpu()
-    else:
-        caffe.set_mode_gpu()
-        caffe.set_device(args.gpu_id)
-        cfg.GPU_ID = args.gpu_id
+    caffe.set_mode_gpu()
+    caffe.set_device(0)
+    cfg.GPU_ID = 0
     net = caffe.Net(prototxt, caffemodel, caffe.TEST)
-
+    return net
     print '\n\nLoaded network {:s}'.format(caffemodel)
-
+def recon():
     # Warmup on a dummy image
     im = 128 * np.ones((300, 500, 3), dtype=np.uint8)
     for i in xrange(2):
@@ -205,10 +185,12 @@ if __name__ == '__main__':
                "C": {"left": itemlistp['3.jpgleft'], "mid": itemlistp['3.jpgmid'], "right": itemlistp['3.jpgright']},
                "D": {"left": itemlistp['4.jpgleft'], "mid": itemlistp['4.jpgmid'], "right": itemlistp['4.jpgright']}}
 
-    print(item_list)
+    return item_list
 
 
     f.close()
     print "Time:", time.time() - t
-    plt.show()
+    #plt.show()
+load_model()
+item_list=recon()
 
