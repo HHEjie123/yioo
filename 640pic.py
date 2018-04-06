@@ -15,28 +15,36 @@ import numpy as np
 import cv2
 import numpy as np
 import  time
-def imgread(picture,imgcutxia,r,g,b):
+def imgread(imgcutxia,r,g,b):
     x=(imgcutxia[:,:,0]>r)
     y=(imgcutxia[:,:,1]>g)
     z= (imgcutxia[:, :, 2] > b)
+    imgcutxia[(x & y & z), :] = 0
+    x=(imgcutxia[:,:,0]<8)
+    y=(imgcutxia[:,:,1]<8)
+    z= (imgcutxia[:, :, 2] <8)
     imgcutxia[(x & y & z),:]=0
+    """
     NpKernel = np.uint8(np.zeros((3, 3)))
     for i in range(3):
-        NpKernel[2, i] = 1
+        NpKernel[2, i] = 1  # 感谢chenpingjun1990的提醒，现在是正确的
         NpKernel[i, 2] = 1
-    #imgcutxia = cv2.erode(imgcutxia, NpKernel)
-    cv2.imwrite('%s_erode.jpg'%(picture),imgcutxia)
-    x = (imgcutxia[:, :, 0] > 6)
-    y = (imgcutxia[:, :, 1] > 6)
-    z = (imgcutxia[:, :, 2] > 6)
+    imgcutxia = cv2.erode(imgcutxia, NpKernel)
+    """
+    x = (imgcutxia[:, :, 0] > 10)
+    y = (imgcutxia[:, :, 1] > 10)
+    z = (imgcutxia[:, :, 2] > 10)
+	
     p=np.sum((x & y & z))
     return  p
 def huojia(picture,pix,r,g,b):
     shang=0
     xia=0
     img = cv2.imread(picture)
-    imgcutshang = img[0:280, 200:580]
-    imgcutxia= img[260:480, 200:580]
+    imgcutshang = img[140:280, 150:550]
+    #cv2.imwrite('%s_yuanshang.jpg' % (picture), imgcutshang)
+    imgcutxia= img[310:480, 150:550]
+    #cv2.imwrite('%s_yuanxia.jpg' % (picture), imgcutxia)
     p1=imgread(picture+'shang',imgcutshang,r,g,b)
     print(picture,'shang has  ',p1)
     if(p1>pix):
