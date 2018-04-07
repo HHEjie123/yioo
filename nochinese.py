@@ -133,19 +133,19 @@ class car_pic():
 
         # cv2.imwrite('%s_yuanxia.jpg' % (picture), imgcutxia)
         p1 = self.imgread(picture + 'shang', imgcutshang, r, g, b)
-        print(picture, 'shang has  ', p1)
+        #print(picture, 'shang has  ', p1)
         if (p1 > pix):
-            print(picture, 'shang is you')
+            #print(picture, 'shang is you')
             shang = 1
-        else:
-            print((picture, 'shang is wu'))
+        #else:
+            #print((picture, 'shang is wu'))
         p2 = self.imgread(picture + 'xia', imgcutxia, r, g, b)
-        print(picture, 'xia  has  ', p2)
+        #print(picture, 'xia  has  ', p2)
         if (p2 > pix):
-            print(picture, 'xia is you')
+            #print(picture, 'xia is you')
             xia = 1
-        else:
-            print((picture, 'xia is wu'))
+        #else:
+            #print((picture, 'xia is wu'))
         cv2.imwrite('%s_shang.jpg' % (picture), imgcutshang)
         cv2.imwrite('%s_xia.jpg' % (picture), imgcutxia)
         cv2.imwrite('maskshang.jpg', imgcutshang)
@@ -237,7 +237,7 @@ class car_pic():
         pix2 = []
         pix3 = []
 
-        start = time.clock()
+        #start = time.clock()
         for kl in range(1, 7):
             print('huojia pic in picture/%d.jpg' % (kl))
             shang, xia, p1, p2 = self.huojia('picture/%d.jpg' % (kl), pix, r, g, b)
@@ -251,8 +251,8 @@ class car_pic():
         pixt = pix1 + pix2
         pix3.sort()
         # print(alist)
-        print(pixt)
-        print((pix3))
+        #print(pixt)
+        print(area,(pixt))
         for xpo in pixt:
             if xpo == pix3[0] or xpo == pix3[1] or xpo == pix3[2]:
                 pixt[pixt.index(xpo)] = 0
@@ -260,7 +260,7 @@ class car_pic():
                 pixt[pixt.index(xpo)] = 1
 
         # print(alist)
-        print(pixt)
+        #print(pixt)
         last_tiem = [[pixt[0], pixt[1], pixt[2], pixt[3], pixt[4], pixt[5]],
                      [pixt[6], pixt[7], pixt[8], pixt[9], pixt[10], pixt[11]
                       ]]
@@ -282,8 +282,8 @@ class car_pic():
             return result
 
         # print(' last item',last_tiem)
-        end = time.clock()
-        print('cost time is', end - start)
+        #end = time.clock()
+        #print('cost time is', end - start)
         return last_tiem
 
     def middle_load_cap(self):
@@ -513,13 +513,34 @@ if __name__ == '__main__':
     tt.huojia_load_pipeline()
     for lll in range(1,7):
        tt.huojia_take_pipeline(lll,0.5)#lll为拍摄序号，0.5为while 持续时间true
-    tt.huojia_close_pipeline()
+    result = tt.huop("A", 500, 70, 70, 75)
+    print(result)
 
+
+    for lll in range(1,7):
+       tt.huojia_take_pipeline(lll,0.5)
+    result = tt.huop("B", 500, 70, 70, 75)
+    print(result)
+
+
+    for lll in range(1,7):
+	   tt.huojia_take_pipeline(lll,0.5)
+    result = tt.huop("C", 500, 70, 70, 75)
+    print(result)
+
+
+    for lll in range(1,7):
+	   tt.huojia_take_pipeline(lll,0.5)
+    result = tt.huop("D", 500, 70, 70, 75)
+    print(result)
+    tt.huojia_close_pipeline()
+    """
     result = tt.huop("A", 500, 70, 70, 75)  # result 为你要的结果的形式，500为判断有无的设置点，70，70，85，为去除货架白色的阈值，全大于时去除
     result = tt.huop("B", 500, 70, 70, 75)
     result = tt.huop("C", 500, 70, 70, 75)
     result = tt.huop("D", 500, 70, 70, 75)
     print(result)
+    """
     print('cost time is    ',time.clock()-qstart)
 
 
