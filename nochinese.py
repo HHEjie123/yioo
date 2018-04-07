@@ -26,7 +26,7 @@ import pyrealsense2 as rs
 # Import Numpy for easy array manipulation
 import numpy as np
 # Import OpenCV for easy image rendering
-
+import datetime
 import cv2
 import numpy as np
 import time
@@ -81,11 +81,13 @@ class car_pic():
                         pt2 = (result.shape[1], int((rho - result.shape[1] * np.cos(theta)) / np.sin(theta)))
                         # 绘制一条直线
                         if (pt2[0] - pt1[0] > 0):
-                            cv2.line(result, pt1, pt2, 0, 1)
+                            cv2.line(result, pt1, pt2, 0, 5)
                             shuipingx.append(pt1[1])
                         print(('pt2=', pt2, 'pt1  =', pt1))
                 # if shuipingx>0:
                 #   break
+        nowiq=datetime.datetime.now()
+        cv2.imwrite('hough/%s_%s_%s_%s_%s_%s.jpg'%(nowiq.year,nowiq.month,nowiq.day,nowiq.hour,nowiq.minute,nowiq.second), result)
         return result, shuipingx
 
     def imgread(self, picture, imgcutxia, r, g, b):
@@ -148,8 +150,8 @@ class car_pic():
             #print((picture, 'xia is wu'))
         cv2.imwrite('%s_shang.jpg' % (picture), imgcutshang)
         cv2.imwrite('%s_xia.jpg' % (picture), imgcutxia)
-        cv2.imwrite('maskshang.jpg', imgcutshang)
-        cv2.imwrite('maskxia.jpg', imgcutxia)
+        #cv2.imwrite('maskshang.jpg', imgcutshang)
+        #cv2.imwrite('maskxia.jpg', imgcutxia)
         return shang, xia, p1, p2
 
     # Streaming loop
@@ -222,7 +224,8 @@ class car_pic():
             picname = 2
             for lm in range(picname):
                 cv2.imwrite('picture/%d.jpg' % (order), bg_removed)
-                # cv2.imwrite('picture/color_%d.jpg' % (lm), color_image)
+	    nowi = datetime.datetime.now()
+            cv2.imwrite('picture1/%s_%s_%s_%s_%s_%s.jpg'%(nowi.year,nowi.month,nowi.day,nowi.hour,nowi.minute,nowi.second), bg_removed)
             if time.clock() - pipstart > pic_time:
                 print(order,'.jpg	has taken')
                 break
