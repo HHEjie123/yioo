@@ -7,7 +7,7 @@
 #####################################################
 import sys
 
-sy_root = '/home/nvidia/realsense/librealsense-master/build/wrappers/python'
+sy_root = '/home/nvidia/hjnew/librealsense-2.9.1/build/wrappers/python'
 sys.path.insert(0, sy_root)
 
 import _init_paths
@@ -22,7 +22,7 @@ import caffe, os, sys, cv2
 import argparse
 import time
 # First import the library
-# import pyrealsense2 as rs
+import pyrealsense2 as rs
 # Import Numpy for easy array manipulation
 import numpy as np
 # Import OpenCV for easy image rendering
@@ -117,8 +117,12 @@ class car_pic():
         img = cv2.imread(picture)
         imgcutshang = img[140:300, 150:550]
         _, shuipingx = self.hough(imgcutshang)
-        max1 = max(shuipingx)
-        min2 = min(shuipingx)
+        if len(shuipingx) == 0:
+            max1=120
+            min2=-1
+        else:
+        	max1 = max(shuipingx)
+        	min2 = min(shuipingx)
         print('shuipilllllllllllllllllllllllllllllllllllllllllllllllllllllngx', max1, min2)
         # imgcutshang = img[(140+max1-130):(140+max1+4), 150:550]
         imgcutshang = img[(140 + max1 - 130):(140 + max1 - 15), 200:480]
@@ -220,6 +224,7 @@ class car_pic():
                 cv2.imwrite('picture/%d.jpg' % (order), bg_removed)
                 # cv2.imwrite('picture/color_%d.jpg' % (lm), color_image)
             if time.clock() - pipstart > pic_time:
+                print(order,'.jpg	has taken')
                 break
 
     def huojia_close_pipeline(self):
@@ -234,6 +239,7 @@ class car_pic():
 
         start = time.clock()
         for kl in range(1, 7):
+            print('huojia pic in picture/%d.jpg' % (kl))
             shang, xia, p1, p2 = self.huojia('picture/%d.jpg' % (kl), pix, r, g, b)
             # alist1.append([shang])
             #  alist2.append([xia])
@@ -281,10 +287,10 @@ class car_pic():
         return last_tiem
 
     def middle_load_cap(self):
-        cap = cv2.VideoCapture(3)
-        print(cap)
-        cap.set(3, 1920)
-        cap.set(4, 1080)
+        self.cap = cv2.VideoCapture(3)
+        print(self.cap)
+        self.cap.set(3, 1920)
+        self.cap.set(4, 1080)
         if not self.cap.isOpened():
             self.cap.open()
 
@@ -347,7 +353,7 @@ class car_pic():
         # plt.axis('off')
         # plt.tight_layout()
         # plt.draw()
-        print('kkkk', class_name, ' ', x1, ' ', x2, ' ', x3, ' ', x4)
+        #print('kkkk', class_name, ' ', x1, ' ', x2, ' ', x3, ' ', x4)
         # if class_name != None :
         return x1, x2, x3, x4, class_name
 
@@ -419,14 +425,20 @@ class car_pic():
         im = 128 * np.ones((300, 500, 3), dtype=np.uint8)
         for i in xrange(2):
             _, _ = im_detect(self.net, im)
-
-        im_names = ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
+        if area is "A":
+			im_names = ['1.jpg']
+        elif area is "B":
+			im_names = ['2.jpg']
+        elif area is "C":
+			im_names = ['3.jpg']
+        elif area is "D":
+			im_names = ['4.jpg']
+        #im_names = ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
         self.dictf = {}
         for im_name in im_names:
             print
             '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
-            print
-            'Demo for data/demo/{}'.format(im_name)
+            #print 'Demo for data/demo/{}'.format(im_name)
             print(im_name)
             self.demo(self.net, im_name)
 
@@ -463,7 +475,7 @@ class car_pic():
         elif area is "D":
             result = {
                 "D": {"left": itemlistp['4.jpgleft'], "mid": itemlistp['4.jpgmid'], "right": itemlistp['4.jpgright']}}
-            return result
+        return result
 
         # plt.show()
 
@@ -477,11 +489,12 @@ NETS = {'vgg16': ('VGG16',
         'zf': ('ZF',
                '3318000ZF_faster_rcnn_final.caffemodel')}
 if __name__ == '__main__':
-    fastercnn_demopicture = '/home/robot-lab/py-faster-rcnn/data/demo/'
+    qstart=time.clock()
+    fastercnn_demopicture = '/home/nvidia/hjnew/hjcaff/py-faster-rcnn/data/demo/'
     tt = car_pic(fastercnn_demopicture)
-  
-    tt.load_model()#load fasterrcnn model
     tt.middle_load_cap()
+    tt.load_model()#load fasterrcnn model
+
     #take middle pictur
     tt.middle_take_cap(1)#1为拍摄序号
     tt.middle_take_cap(2)
@@ -490,9 +503,13 @@ if __name__ == '__main__':
     tt.middle_close_cap()
     #item_list就是返回结果
     result = tt.recon("A")
+    print('A  :',result)
     result = tt.recon("B")
+    print('B  :',result)
     result = tt.recon("C")
+    print('C  :',result)
     result = tt.recon("D")
+    print('D  :',result)
     tt.huojia_load_pipeline()
     for lll in range(1,7):
        tt.huojia_take_pipeline(lll,0.5)#lll为拍摄序号，0.5为while 持续时间true
@@ -503,6 +520,7 @@ if __name__ == '__main__':
     result = tt.huop("C", 500, 70, 70, 75)
     result = tt.huop("D", 500, 70, 70, 75)
     print(result)
+    print('cost time is    ',time.clock()-qstart)
 
 
 
